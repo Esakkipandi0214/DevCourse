@@ -17,6 +17,21 @@ export default function DashboardPage() {
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+             {/* Main Content */}
+            <div className="lg:col-span-2 flex items-center justify-center">
+              <Card className="w-full text-center py-20">
+                <CardHeader>
+                  <CardTitle className="text-2xl font-bold">📢 Course Coming Soon!</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">
+                    We’re preparing the next set of lessons for you. Stay tuned for updates and keep an eye on your email!
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+            
             {/* Main Content */}
             {/* <div className="lg:col-span-2 space-y-6">
             
