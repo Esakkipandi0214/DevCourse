@@ -15,8 +15,11 @@ import {
   TrendingUp,
   CheckCircle
 } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function WhyChooseUsPage() {
+  const {user} = useAuth();
+  const isAuthenticated = user;
   const benefits = [
     {
       icon: DollarSign,
@@ -297,7 +300,7 @@ export default function WhyChooseUsPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 gradient-primary text-white">
+      {!isAuthenticated && <section className="py-16 gradient-primary text-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Transform Your Career?</h2>
           <p className="text-xl mb-8 text-blue-100 max-w-2xl mx-auto">
@@ -307,7 +310,7 @@ export default function WhyChooseUsPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/auth">
               <Button size="lg" className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold">
-                Enroll Now - ₹1000
+                Enroll Now
               </Button>
             </Link>
             <a href="https://wa.me/918925722979" target="_blank" rel="noopener noreferrer">
@@ -317,7 +320,7 @@ export default function WhyChooseUsPage() {
             </a>
           </div>
         </div>
-      </section>
+      </section>}
     </div>
   );
 }

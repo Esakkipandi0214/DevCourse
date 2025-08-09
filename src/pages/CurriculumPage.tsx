@@ -18,7 +18,7 @@ import {
 
 export default function CurriculumPage() {
   const { user } = useAuth();
-
+  const isAuthenticated = !!user;
   const modules = [
     {
       id: 1,
@@ -319,7 +319,7 @@ export default function CurriculumPage() {
             
             <Link to="/auth">
               <Button size="lg" className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold">
-                Enroll Now - ₹1000
+                Register Now
               </Button>
             </Link>
           </div>

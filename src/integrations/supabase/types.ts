@@ -1,14 +1,4 @@
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[]
-
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "13.0.4"
   }
@@ -32,41 +22,64 @@ export type Database = {
         }
         Relationships: []
       }
-      enrollments: {
+      courses: {
         Row: {
-          email: string
-          enrolled_at: string
-          full_name: string
+          tags: string[] | null
           id: string
-          payment_amount: number | null
-          payment_status: string
-          phone: string
-          updated_at: string
-          user_id: string
+          title: string
+          description: string | null
+          price: number | null
+          created_at: string
         }
         Insert: {
-          email: string
-          enrolled_at?: string
-          full_name: string
           id?: string
-          payment_amount?: number | null
-          payment_status?: string
-          phone: string
-          updated_at?: string
-          user_id: string
+          title: string
+          description?: string | null
+          price?: number | null
+          created_at?: string
         }
         Update: {
-          email?: string
-          enrolled_at?: string
-          full_name?: string
           id?: string
-          payment_amount?: number | null
-          payment_status?: string
-          phone?: string
-          updated_at?: string
-          user_id?: string
+          title?: string
+          description?: string | null
+          price?: number | null
+          created_at?: string
         }
         Relationships: []
+      }
+      enrollments: {
+        Row: {
+          id: string
+          user_id: string
+          course_id: string
+          enrolled_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          course_id: string
+          enrolled_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          course_id?: string
+          enrolled_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "enrollments_course_id_fkey"
+            columns: ["course_id"]
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "enrollments_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       profiles: {
         Row: {
@@ -110,6 +123,8 @@ export type Database = {
     }
   }
 }
+
+
 
 type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
 

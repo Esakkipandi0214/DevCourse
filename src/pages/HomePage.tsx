@@ -14,8 +14,11 @@ import {
   Video
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function HomePage() {
+    const {user } = useAuth();
+    const isAuthenticated = user;
   const scrollToRegistration = () => {
     const element = document.getElementById('registration');
     element?.scrollIntoView({ behavior: 'smooth' });
@@ -47,14 +50,14 @@ export default function HomePage() {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <Button 
+                {!isAuthenticated && <Button 
                   size="lg" 
                   className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold"
                   onClick={scrollToRegistration}
                 >
-                  Join Now for ₹1000
+                  Join Now
                   <ChevronRight className="ml-2 h-5 w-5" />
-                </Button>
+                </Button>}
                 <Link to="/curriculum">
                   <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-blue-600">
                     View Curriculum
@@ -239,7 +242,7 @@ export default function HomePage() {
       </section> */}
 
       {/* CTA Section */}
-      <section id="registration" className="py-20 gradient-primary text-white">
+     {!isAuthenticated && <section id="registration" className="py-20 gradient-primary text-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl lg:text-4xl font-bold mb-6">Ready to Start Your Journey?</h2>
           <p className="text-xl mb-8 text-blue-100 max-w-2xl mx-auto">
@@ -249,7 +252,7 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/auth">
               <Button size="lg" className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold">
-                Register Now - ₹1000
+                Register Now
                 <ChevronRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
@@ -260,7 +263,7 @@ export default function HomePage() {
             </a> */}
           </div>
         </div>
-      </section>
+      </section>}
 
       {/* Fixed Join Button for Mobile */}
       <div className="fixed bottom-6 right-6 z-50 md:hidden">

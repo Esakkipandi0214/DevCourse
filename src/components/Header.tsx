@@ -23,9 +23,10 @@ export function Header() {
   const navItems = [
     { label: 'Home', href: '/' },
     { label: 'About', href: '/about' },
-    { label: 'Curriculum', href: '/curriculum' },
+    { label: 'Courses', href: '/Courses' },
+    // { label: 'Curriculum', href: '/curriculum' },
     { label: 'Why Choose Us', href: '/why-choose-us' },
-    { label: 'Projects', href: '/projects' },
+    // { label: 'Projects', href: '/projects' },
     // { label: 'Trainer', href: '/trainer' },
     // { label: 'FAQ', href: '/faq' },
   ];
