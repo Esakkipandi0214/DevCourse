@@ -27,7 +27,6 @@ export default function AuthPage() {
     // Redirect if already authenticated
   if (user) {
     navigate('/dashboard');
-    return null;
   }
   },[user, navigate]);
 
