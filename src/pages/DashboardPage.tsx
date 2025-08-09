@@ -36,7 +36,7 @@ export default function DashboardPage() {
                     <p className="text-sm text-muted-foreground mb-2">Learn React components and state management</p>
                     <div className="flex items-center text-sm text-muted-foreground">
                       <Clock className="h-4 w-4 mr-1" />
-                      7:00 PM - 9:00 PM
+                      7:00 PM - 8:00 PM
                     </div>
                     <Button className="mt-3" size="sm">
                       <Video className="h-4 w-4 mr-2" />
@@ -83,32 +83,24 @@ export default function DashboardPage() {
                   <CardTitle>Downloads</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
+                   <a
+      href="/Docs/Full%20Stack%20Curriculum.pdf"
+      download
+      className="w-full"
+    >
                   <Button variant="outline" className="w-full justify-start">
                     <Download className="h-4 w-4 mr-2" />
                     Course Syllabus
                   </Button>
-                  <Button variant="outline" className="w-full justify-start">
+                  </a>
+                  {/* <Button variant="outline" className="w-full justify-start">
                     <Download className="h-4 w-4 mr-2" />
                     Project Resources
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start" disabled>
+                  </Button> */}
+                  {/* <Button variant="outline" className="w-full justify-start" disabled>
                     <Download className="h-4 w-4 mr-2" />
                     Certificate (In Progress)
-                  </Button>
-                </CardContent>
-              </Card>
-
-              {/* Payment Status */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Payment Status</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center space-x-2 text-green-600">
-                    <CheckCircle className="h-5 w-5" />
-                    <span className="font-semibold">Paid</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-2">₹800 - Full Course Access</p>
+                  </Button> */}
                 </CardContent>
               </Card>
             </div>

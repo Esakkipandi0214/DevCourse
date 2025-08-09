@@ -136,7 +136,7 @@ export default function CurriculumPage() {
               </div>
               <div className="flex items-center">
                 <Clock className="h-5 w-5 mr-2 text-primary" />
-                <span>Evening Classes (7-9 PM)</span>
+                <span>Evening Classes (7-8 PM)</span>
               </div>
               <div className="flex items-center">
                 <Users className="h-5 w-5 mr-2 text-primary" />
@@ -277,13 +277,13 @@ export default function CurriculumPage() {
               </p>
             </div>
             
-            <Card className="bg-gradient-primary text-white">
+            <Card className=" bg-[#3466f2] text-white">
               <CardContent className="p-8">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                   <div>
                     <Clock className="h-8 w-8 mx-auto mb-4" />
                     <h3 className="text-xl font-semibold mb-2">Timing</h3>
-                    <p className="text-blue-100">7:00 PM - 9:00 PM</p>
+                    <p className="text-blue-100">7:00 PM - 8:00 PM</p>
                     <p className="text-blue-100 text-sm">Monday to Friday</p>
                   </div>
                   
@@ -314,12 +314,12 @@ export default function CurriculumPage() {
             <h2 className="text-3xl font-bold mb-4">Ready to Start Learning?</h2>
             <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
               Join our evening batch and get access to the complete curriculum, 
-              live projects, and lifetime support for just ₹800.
+              live projects, and lifetime support for just ₹1000.
             </p>
             
             <Link to="/auth">
               <Button size="lg" className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold">
-                Enroll Now - ₹800
+                Enroll Now - ₹1000
               </Button>
             </Link>
           </div>

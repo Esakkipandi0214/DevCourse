@@ -29,7 +29,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="text-center lg:text-left">
               <div className="animate-float mb-6">
-                <Badge variant="secondary" className="text-primary bg-white/20 border-white/30">
+                <Badge variant="secondary" className="text-primary text-white bg-white/20 border-white/30">
                   🚀 Evening Batch - Perfect for Working Professionals
                 </Badge>
               </div>
@@ -52,7 +52,7 @@ export default function HomePage() {
                   className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold"
                   onClick={scrollToRegistration}
                 >
-                  Join Now for ₹800
+                  Join Now for ₹1000
                   <ChevronRight className="ml-2 h-5 w-5" />
                 </Button>
                 <Link to="/curriculum">
@@ -180,7 +180,7 @@ export default function HomePage() {
               <div className="text-blue-100">Live Projects</div>
             </div>
             <div>
-              <div className="text-3xl lg:text-4xl font-bold mb-2">₹800</div>
+              <div className="text-3xl lg:text-4xl font-bold mb-2">₹1000</div>
               <div className="text-blue-100">Course Fee</div>
             </div>
             <div>
@@ -192,7 +192,7 @@ export default function HomePage() {
       </section>
 
       {/* Testimonial Section */}
-      <section className="py-20">
+      {/* <section className="py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl lg:text-4xl font-bold mb-12">What Students Say</h2>
@@ -236,7 +236,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* CTA Section */}
       <section id="registration" className="py-20 gradient-primary text-white">
@@ -249,15 +249,15 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/auth">
               <Button size="lg" className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold">
-                Register Now - ₹800
+                Register Now - ₹1000
                 <ChevronRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
-            <a href="https://wa.me/918925722979" target="_blank" rel="noopener noreferrer">
+            {/* <a href="https://wa.me/918925722979" target="_blank" rel="noopener noreferrer">
               <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-blue-600">
                 WhatsApp Us
               </Button>
-            </a>
+            </a> */}
           </div>
         </div>
       </section>

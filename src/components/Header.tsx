@@ -27,7 +27,7 @@ export function Header() {
     { label: 'Why Choose Us', href: '/why-choose-us' },
     { label: 'Projects', href: '/projects' },
     { label: 'Trainer', href: '/trainer' },
-    { label: 'FAQ', href: '/faq' },
+    // { label: 'FAQ', href: '/faq' },
   ];
 
   return (

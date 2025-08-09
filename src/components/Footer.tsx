@@ -33,9 +33,9 @@ export function Footer() {
               <Link to="/trainer" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                 Trainer
               </Link>
-              <Link to="/faq" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+              {/* <Link to="/faq" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                 FAQ
-              </Link>
+              </Link> */}
             </nav>
           </div>
 
@@ -49,12 +49,12 @@ export function Footer() {
                   +91 8925722979
                 </a>
               </div>
-              <div className="flex items-center space-x-2">
+              {/* <div className="flex items-center space-x-2">
                 <Mail className="h-4 w-4 text-primary" />
                 <a href="mailto:info@devcourse.com" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   info@devcourse.com
                 </a>
-              </div>
+              </div> */}
               <div className="flex items-center space-x-2">
                 <MessageCircle className="h-4 w-4 text-primary" />
                 <a 
@@ -70,7 +70,7 @@ export function Footer() {
           </div>
 
           {/* Social Links */}
-          <div className="space-y-4">
+          {/* <div className="space-y-4">
             <h4 className="text-lg font-semibold">Follow Us</h4>
             <div className="flex space-x-4">
               <a 
@@ -98,7 +98,7 @@ export function Footer() {
                 <Instagram className="h-5 w-5" />
               </a>
             </div>
-          </div>
+          </div> */}
         </div>
 
         <div className="mt-8 pt-8 border-t text-center">

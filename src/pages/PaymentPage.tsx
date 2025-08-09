@@ -49,7 +49,7 @@ export default function PaymentPage() {
           email: user.email!,
           phone: profile.phone || '',
           payment_status: 'paid', // Mock payment success
-          payment_amount: 800
+          payment_amount: 1000
         });
 
       if (enrollmentError) {

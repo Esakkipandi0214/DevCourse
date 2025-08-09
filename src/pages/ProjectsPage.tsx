@@ -348,7 +348,7 @@ export default function ProjectsPage() {
           
           <Link to="/auth">
             <Button size="lg" className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold">
-              Start Building - ₹800
+              Start Building - ₹1000
             </Button>
           </Link>
         </div>
