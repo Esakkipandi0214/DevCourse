@@ -22,7 +22,7 @@ export default function MernCourseCard() {
   const { courses, enrollments, enrollInCourse, loading } = useCourses();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
-     const { user, isAdmin } = useAuth();
+  const { user, isAdmin } = useAuth();
 
   if (loading) {
     return <div>Loading...</div>;

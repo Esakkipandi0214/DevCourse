@@ -10,6 +10,10 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   isAdmin: boolean;
+  setAdmin: (userId: string) => Promise<{ error: any }>;
+  removeAdmin: (userId: string) => Promise<{ error: any }>;
+  allUsers: any[];
+  fetchAllUsers: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -19,75 +23,126 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [allUsers, setAllUsers] = useState<any[]>([]);
 
   useEffect(() => {
-    // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
-        
-        // Check admin status when user changes
+
         if (session?.user) {
-          setTimeout(async () => {
-            try {
-              const { data } = await supabase
-                .from('admin_users')
-                .select('id')
-                .eq('user_id', session.user.id)
-                .single();
-              setIsAdmin(!!data);
-            } catch (error) {
-              setIsAdmin(false);
-            }
-          }, 0);
+          checkAdminStatus(session.user.id);
         } else {
           setIsAdmin(false);
         }
-        
+
         setLoading(false);
       }
     );
 
-    // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
+      if (session?.user) {
+        // console.log("User session:", session.user);
+        
+        checkAdminStatus(session.user.id);
+      }
       setLoading(false);
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
+const checkAdminStatus = async (authUserId: string) => {
+  try {
+    // 1. Get the profile row for this auth user
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("id") // profiles.id is the FK to admin_users.user_id
+      .eq("user_id", authUserId)
+      .single();
+
+    if (profileError) throw profileError;
+
+    // 2. Get all admin rows
+    const { data: allAdmins, error: allAdminsError } = await supabase
+      .from("admin_users")
+      .select("*");
+
+    if (allAdminsError) throw allAdminsError;
+
+    // console.log("Profile:", profile, "All Admins:", allAdmins);
+
+    // 3. Compare profile.id to admin_users.user_id
+    const isAdmin = allAdmins.some(admin => admin.user_id === profile.id);
+    setIsAdmin(isAdmin);
+
+  } catch (err) {
+    // console.error("Error:", err);
+    setIsAdmin(false);
+  }
+};
+
+
+
+  const fetchAllUsers = async () => {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('id, full_name, phone,user_id');
+    if (!error) {
+      setAllUsers(data);
+    }
+  };
+
   const signUp = async (email: string, password: string, fullName: string, phone: string) => {
     const redirectUrl = `${window.location.origin}/`;
-    
+
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         emailRedirectTo: redirectUrl,
-        data: {
-          full_name: fullName,
-          phone: phone
-        }
+        data: { full_name: fullName, phone }
       }
     });
-    
+
     return { error };
   };
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
-    
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
     return { error };
   };
 
   const signOut = async () => {
     await supabase.auth.signOut();
+  };
+
+  const setAdmin = async (userId: string) => {
+    const { error } = await supabase
+      .from('admin_users')
+      .insert([{ user_id: userId }]);
+
+    if (!error && user?.id === userId) {
+      setIsAdmin(true);
+    }
+
+    return { error };
+  };
+
+  const removeAdmin = async (userId: string) => {
+    const { error } = await supabase
+      .from('admin_users')
+      .delete()
+      .eq('user_id', userId);
+
+    if (!error && user?.id === userId) {
+      setIsAdmin(false);
+    }
+
+    return { error };
   };
 
   const value = {
@@ -97,7 +152,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signUp,
     signIn,
     signOut,
-    isAdmin
+    isAdmin,
+    setAdmin,
+    removeAdmin,
+    allUsers,
+    fetchAllUsers
   };
 
   return (

@@ -64,7 +64,7 @@ export function Header() {
                   </Button>
                 </Link>
                 {isAdmin && (
-                  <Link to="/admin">
+                  <Link to="/admin/courses">
                     <Button variant="ghost" size="sm">
                       Admin
                     </Button>

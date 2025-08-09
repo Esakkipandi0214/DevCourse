@@ -1,21 +1,24 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import type { Database } from '@/integrations/supabase/types';
 
 type Course = Database['public']['Tables']['courses']['Row'];
 type Enrollment = Database['public']['Tables']['enrollments']['Row'] & { courses: Course | null };
+type Profile = Database['public']['Tables']['profiles']['Row'];
 
 interface CourseContextType {
   courses: Course[];
   enrollments: Enrollment[];
   loading: boolean;
   createCourse: (title: string, description: string, price: number, tags: string[]) => Promise<void>;
+  courseUsers: Profile[];
   updateCourse: (courseId: string, title: string, description: string, price: number, tags: string[]) => Promise<void>;
   deleteCourse: (courseId: string) => Promise<void>;
   enrollInCourse: (courseId: string) => Promise<void>;
   fetchCourses: () => Promise<void>;
   fetchUserEnrollments: () => Promise<void>;
+  fetchCourseEnrollments: (courseId: string) => Promise<void>;
 }
 
 const CourseContext = createContext<CourseContextType | undefined>(undefined);
@@ -24,18 +27,19 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
   const [courses, setCourses] = useState<Course[]>([]);
   const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
+  const [courseUsers, setCourseUsers] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchCourses = async () => {
+  const fetchCourses = useCallback(async () => {
     setLoading(true);
     const { data, error } = await supabase
       .from("courses")
       .select("*");
     if (!error) setCourses(data);
     setLoading(false);
-  };
+  }, []);
 
-  const fetchUserEnrollments = async () => {
+  const fetchUserEnrollments = useCallback(async () => {
     if (!user) return;
     setLoading(true);
     const { data, error } = await supabase
@@ -44,27 +48,57 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
       .eq("user_id", user.id);
     if (!error) setEnrollments(data as Enrollment[]);
     setLoading(false);
-  };
+  }, [user]);
+
+  const fetchCourseEnrollments = useCallback(async (courseId: string) => {
+    setLoading(true);
+    const { data: enrollments, error: enrollmentError } = await supabase
+      .from("enrollments")
+      .select("user_id")
+      .eq("course_id", courseId);
+
+    if (enrollmentError) {
+      // console.error("Error fetching enrollments:", enrollmentError);
+      setLoading(false);
+      return;
+    }
+
+    const userIds = enrollments.map(enrollment => enrollment.user_id);
+    const { data: users, error: userError } = await supabase
+      .from("profiles")
+      .select("*")
+      .in("user_id", userIds);
+
+    if (userError) {
+      // console.error("Error fetching users:", userError);
+    } else {
+      setCourseUsers(users);
+    }
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
     fetchCourses();
+  }, [fetchCourses]);
+
+  useEffect(() => {
     if (user) {
       fetchUserEnrollments();
     }
-  }, [user]);
+  }, [user, fetchUserEnrollments]);
 
-  const createCourse = async (title: string, description: string, price: number, tags: string[]) => {
+  const createCourse = useCallback(async (title: string, description: string, price: number, tags: string[]) => {
     const { error } = await supabase
       .from("courses")
       .insert([{ title, description, price, tags }]);
     if (!error) {
       await fetchCourses();
     } else {
-      console.error("Error creating course:", error);
+      // console.error("Error creating course:", error);
     }
-  };
+  }, [fetchCourses]);
 
-  const updateCourse = async (courseId: string, title: string, description: string, price: number, tags: string[]) => {
+  const updateCourse = useCallback(async (courseId: string, title: string, description: string, price: number, tags: string[]) => {
     const { error } = await supabase
       .from("courses")
       .update({ title, description, price, tags })
@@ -72,12 +106,12 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
     if (!error) {
       await fetchCourses();
     } else {
-      console.error("Error updating course:", error);
+      // console.error("Error updating course:", error);
       throw error;
     }
-  };
+  }, [fetchCourses]);
 
-  const deleteCourse = async (courseId: string) => {
+  const deleteCourse = useCallback(async (courseId: string) => {
     const { error } = await supabase
       .from("courses")
       .delete()
@@ -85,11 +119,11 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
     if (!error) {
       await fetchCourses();
     } else {
-      console.error("Error deleting course:", error);
+      // console.error("Error deleting course:", error);
     }
-  };
+  }, [fetchCourses]);
 
-  const enrollInCourse = async (courseId: string) => {
+  const enrollInCourse = useCallback(async (courseId: string) => {
     if (!user) return;
     const { error } = await supabase
       .from("enrollments")
@@ -97,19 +131,15 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
     if (!error) {
       await fetchUserEnrollments();
     } else {
-      console.error("Error enrolling in course:", error);
+      // console.error("Error enrolling in course:", error);
     }
-  };
-
-  
-
-  
-
+  }, [user, fetchUserEnrollments]);
 
   return (
     <CourseContext.Provider
       value={{
         courses,
+        courseUsers,
         enrollments,
         loading,
         createCourse,
@@ -118,7 +148,7 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
         enrollInCourse,
         fetchCourses,
         fetchUserEnrollments,
-        
+        fetchCourseEnrollments
       }}
     >
       {children}
