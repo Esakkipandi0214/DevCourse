@@ -91,8 +91,7 @@ export default function DashboardPage() {
             </div> */}
 
             {/* Sidebar */}
-            <div className="space-y-6">
-              {/* Downloads */}
+            {/* <div className="space-y-6">
               <Card>
                 <CardHeader>
                   <CardTitle>Downloads</CardTitle>
@@ -108,17 +107,9 @@ export default function DashboardPage() {
                     Course Syllabus
                   </Button>
                   </a>
-                  {/* <Button variant="outline" className="w-full justify-start">
-                    <Download className="h-4 w-4 mr-2" />
-                    Project Resources
-                  </Button> */}
-                  {/* <Button variant="outline" className="w-full justify-start" disabled>
-                    <Download className="h-4 w-4 mr-2" />
-                    Certificate (In Progress)
-                  </Button> */}
                 </CardContent>
               </Card>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

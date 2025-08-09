@@ -13,7 +13,8 @@ import {
   Lock,
   Calendar,
   Clock,
-  Users
+  Users,
+  Download
 } from 'lucide-react';
 
 export default function CurriculumPage() {
@@ -128,7 +129,18 @@ export default function CurriculumPage() {
               A comprehensive 8-week journey covering frontend, backend, databases, and real-world projects.
               Perfect for evening learners and working professionals.
             </p>
-            
+            <div className=' grid p-2 justify-center item-center'>
+                   <a
+      href="/Docs/Full%20Stack%20Curriculum.pdf"
+      download
+      className="w-full"
+    >
+                  <Button variant="outline" className="w-full justify-start">
+                    <Download className="h-4 w-4 mr-2" />
+                    Course Syllabus
+                  </Button>
+                  </a>
+                </div>
             <div className="flex flex-wrap justify-center gap-6 text-muted-foreground">
               <div className="flex items-center">
                 <Calendar className="h-5 w-5 mr-2 text-primary" />
