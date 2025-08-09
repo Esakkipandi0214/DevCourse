@@ -38,11 +38,11 @@ const App = () => (
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/trainer" element={<TrainerPage />} />
             <Route path="/auth" element={<AuthPage />} />
-            <Route path="/payment" element={
+            {/* <Route path="/payment" element={
               <ProtectedRoute>
                 <PaymentPage />
               </ProtectedRoute>
-            } />
+            } /> */}
             <Route path="/dashboard" element={
               <ProtectedRoute>
                 <DashboardPage />

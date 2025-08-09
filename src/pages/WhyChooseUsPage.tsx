@@ -21,21 +21,20 @@ export default function WhyChooseUsPage() {
     {
       icon: DollarSign,
       title: "Affordable Pricing",
-      description: "Premium quality education at just ₹800 for the complete 2-month course. Best value in the market for full stack development training.",
+      description: "Premium quality education at just ₹1000 for the complete 2-month course. Best value in the market for full stack development training.",
       features: [
-        "Complete course for just ₹800",
+        "Complete course for just ₹1000",
         "No hidden charges or additional fees",
-        "EMI options available",
-        "Money-back guarantee"
+        "payment after first class",
+        "Best value for money in the industry"
       ]
     },
     {
       icon: User,
       title: "Experienced Trainer",
-      description: "Learn from industry professionals with 5+ years of experience in top tech companies. Real-world insights and practical knowledge.",
+      description: "Learn from industry professionaly experienced techies. Real-world insights and practical knowledge.",
       features: [
-        "5+ years industry experience",
-        "Worked in top tech companies",
+        "Industry veteran trainer",
         "Expert in modern technologies",
         "Personalized mentoring approach"
       ]
@@ -57,9 +56,8 @@ export default function WhyChooseUsPage() {
       description: "Get lifetime access to all class recordings so you can revisit concepts anytime and learn at your own pace.",
       features: [
         "Lifetime access to recordings",
-        "HD quality video content",
+        "Quality video content",
         "Mobile-friendly platform",
-        "Download for offline viewing"
       ]
     },
     {
@@ -76,9 +74,9 @@ export default function WhyChooseUsPage() {
     {
       icon: Clock,
       title: "Perfect Timing",
-      description: "Evening classes from 7-9 PM designed specifically for working professionals and students with day-time commitments.",
+      description: "Evening classes from 7-8 PM designed specifically for working professionals and students with day-time commitments.",
       features: [
-        "7:00 PM - 9:00 PM timing",
+        "7:00 PM - 8:00 PM timing",
         "Monday to Friday schedule",
         "Weekend doubt clearing sessions",
         "Flexible makeup classes"
@@ -87,21 +85,21 @@ export default function WhyChooseUsPage() {
   ];
 
   const additionalBenefits = [
-    {
-      icon: Award,
-      title: "Certificate of Completion",
-      description: "Industry-recognized certificate upon successful completion of the course."
-    },
+    // {
+    //   icon: Award,
+    //   title: "Certificate of Completion",
+    //   description: "Industry-recognized certificate upon successful completion of the course."
+    // },
     {
       icon: HeartHandshake,
       title: "Lifetime Support",
       description: "Get continued support and guidance even after course completion."
     },
-    {
-      icon: Target,
-      title: "Job Assistance",
-      description: "Resume building, interview preparation, and job placement assistance."
-    },
+    // {
+    //   icon: Target,
+    //   title: "Job Assistance",
+    //   description: "Resume building, interview preparation, and job placement assistance."
+    // },
     {
       icon: TrendingUp,
       title: "Career Growth",
@@ -214,7 +212,7 @@ export default function WhyChooseUsPage() {
                     <tbody className="divide-y">
                       <tr>
                         <td className="p-4">Course Fee</td>
-                        <td className="p-4 text-center text-green-600 font-semibold">₹800</td>
+                        <td className="p-4 text-center text-green-600 font-semibold">₹1000</td>
                         <td className="p-4 text-center text-red-600">₹5,000 - ₹25,000</td>
                       </tr>
                       <tr>
@@ -234,7 +232,7 @@ export default function WhyChooseUsPage() {
                       </tr>
                       <tr>
                         <td className="p-4">Evening Timing</td>
-                        <td className="p-4 text-center text-green-600 font-semibold">7-9 PM</td>
+                        <td className="p-4 text-center text-green-600 font-semibold">7-8 PM</td>
                         <td className="p-4 text-center text-red-600">Day Time Only</td>
                       </tr>
                       <tr>
@@ -309,7 +307,7 @@ export default function WhyChooseUsPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/auth">
               <Button size="lg" className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold">
-                Enroll Now - ₹800
+                Enroll Now - ₹1000
               </Button>
             </Link>
             <a href="https://wa.me/918925722979" target="_blank" rel="noopener noreferrer">

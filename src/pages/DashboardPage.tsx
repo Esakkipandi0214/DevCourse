@@ -18,8 +18,8 @@ export default function DashboardPage() {
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Content */}
-            <div className="lg:col-span-2 space-y-6">
-              {/* Upcoming Classes */}
+            {/* <div className="lg:col-span-2 space-y-6">
+            
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center">
@@ -46,7 +46,7 @@ export default function DashboardPage() {
                 </CardContent>
               </Card>
 
-              {/* Course Progress */}
+             
               <Card>
                 <CardHeader>
                   <CardTitle>Course Progress</CardTitle>
@@ -73,7 +73,7 @@ export default function DashboardPage() {
                   </div>
                 </CardContent>
               </Card>
-            </div>
+            </div> */}
 
             {/* Sidebar */}
             <div className="space-y-6">
