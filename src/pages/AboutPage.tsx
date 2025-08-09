@@ -149,7 +149,7 @@ export default function AboutPage() {
                   <div>
                     <h3 className="font-semibold mb-2">Affordable Pricing</h3>
                     <p className="text-muted-foreground">
-                      High-quality education at just ₹800 for the complete 2-month course, 
+                      High-quality education at just ₹1000 for the complete 2-month course, 
                       making it accessible to everyone.
                     </p>
                   </div>
