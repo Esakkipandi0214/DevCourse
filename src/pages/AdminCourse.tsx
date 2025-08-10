@@ -118,7 +118,7 @@ const CourseListPage = () => {
   const handleCourseClick = useCallback(
     async (course: Course) => {
       setSelectedCourse(course);
-      await fetchCourseEnrollments(course.id);
+      await fetchCourseEnrollments(course.id.toString());
     },
     [fetchCourseEnrollments]
   );

@@ -40,16 +40,12 @@ export default function PaymentPage() {
         return;
       }
 
-      // Create enrollment record
+      // Create enrollment record - only using fields that exist in enrollments table
       const { error: enrollmentError } = await supabase
         .from('enrollments')
         .insert({
-          user_id: user.id,
-          full_name: profile.full_name,
-          email: user.email!,
-          phone: profile.phone || '',
-          payment_status: 'paid', // Mock payment success
-          payment_amount: 1000
+          user_id: profile.id, // Use profile.id instead of user.id as per the schema
+          course_id: '1' // Default course ID for the Full Stack Developer course
         });
 
       if (enrollmentError) {
