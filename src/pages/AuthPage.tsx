@@ -103,7 +103,7 @@ export default function AuthPage() {
             title: "Success!",
             description: "Account created successfully. Please check your email to verify your account.",
           });
-          navigate('/payment');
+          navigate('/dashboard');
         }
       } else {
         const { error } = await signIn(formData.email, formData.password);
