@@ -63,13 +63,13 @@ export function Header() {
                     Dashboard
                   </Button>
                 </Link>
-                {isAdmin && (
+                {/* {isAdmin && (
                   <Link to="/admin/courses">
                     <Button variant="ghost" size="sm">
                       Admin
                     </Button>
                   </Link>
-                )}
+                )} */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="sm">

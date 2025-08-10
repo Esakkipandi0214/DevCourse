@@ -76,10 +76,10 @@ const UserManagement = React.memo(({ allUsers, onMakeAdmin }: { allUsers: any[];
             <div>
               <span className="font-semibold">{user.full_name || 'Unknown User'}</span> — {user.phone || '--'}  
               <span className={`ml-2 px-2 py-1 text-xs rounded ${user.is_admin ? 'bg-green-200 text-green-800' : 'bg-gray-200 text-gray-800'}`}>
-                {user.is_admin ? 'Admin' : 'User'}
+                {user.isAdmin ? 'Admin' : 'User'}
               </span>
             </div>
-            {!user.is_admin && (
+            {!user.isAdmin && (
               <button
                 onClick={() => onMakeAdmin(user.id)}
                 className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"

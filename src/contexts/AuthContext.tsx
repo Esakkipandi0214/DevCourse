@@ -87,14 +87,42 @@ const checkAdminStatus = async (authUserId: string) => {
 
 
 
-  const fetchAllUsers = async () => {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('id, full_name, phone,user_id');
-    if (!error) {
-      setAllUsers(data);
-    }
-  };
+const fetchAllUsers = async () => {
+  // 1. Get all profiles
+  const { data: profilesData, error: profilesError } = await supabase
+    .from("profiles")
+    .select("id, full_name, phone, user_id");
+
+  if (profilesError) {
+    console.error("Profiles fetch error:", profilesError);
+    return;
+  }
+
+  // 2. Get all admins
+  const { data: adminsData, error: adminsError } = await supabase
+    .from("admin_users")
+    .select("user_id");
+
+  if (adminsError) {
+    console.error("Admins fetch error:", adminsError);
+    return;
+  }
+
+  // 3. Convert admin list to a Set for fast lookup
+  const adminUserIds = new Set(adminsData.map(admin => admin.user_id));
+
+  // 4. Add isAdmin flag to each profile
+  const usersWithAdminFlag = profilesData.map(user => ({
+    ...user,
+    isAdmin: adminUserIds.has(user.id)
+  }));
+
+  // 5. Save to state
+  setAllUsers(usersWithAdminFlag);
+
+  console.log("All users with admin flag:", usersWithAdminFlag);
+};
+
 
   const signUp = async (email: string, password: string, fullName: string, phone: string) => {
     const redirectUrl = `${window.location.origin}/`;
