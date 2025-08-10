@@ -11,14 +11,27 @@ import { Loader2 } from "lucide-react";
 interface CreateCourseModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
+  course: {
+    id: string;
+    title: string;
+    description: string;
+    price: number;
+    tags: string[];
+    startingDate: string,
+    endingDate: string,
+    holidays: string[]
+  } | null;
 }
 
-const CreateCourseModal: React.FC<CreateCourseModalProps> = ({ isOpen, onRequestClose }) => {
+const CreateCourseModal: React.FC<CreateCourseModalProps> = ({ isOpen, onRequestClose ,course}) => {
   const { createCourse } = useCourses();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState<number | "">("");
   const [tags, setTags] = useState("");
+  const [startingDate, setStartingDate] = useState("");
+  const [endingDate, setEndingDate] = useState("");
+  const [holidays, setHolidays] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -30,13 +43,16 @@ const CreateCourseModal: React.FC<CreateCourseModalProps> = ({ isOpen, onRequest
       setDescription("");
       setPrice("");
       setTags("");
+      setStartingDate(course?.startingDate || "");
+    setEndingDate(course?.endingDate || "");
+    setHolidays(course?.holidays ? course.holidays.join(", ") : "");
       setError(null);
       setSuccess(false);
       setTimeout(() => {
         titleInputRef.current?.focus();
       }, 100);
     }
-  }, [isOpen]);
+  }, [isOpen,course]);
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === "Escape" && isOpen) {
@@ -82,7 +98,9 @@ const CreateCourseModal: React.FC<CreateCourseModalProps> = ({ isOpen, onRequest
 
     setIsLoading(true);
     try {
-      await createCourse(title.trim(), description.trim(), Number(price), tagsArray);
+      await createCourse(title.trim(), description.trim(), Number(price), tagsArray,startingDate,
+  endingDate,
+  holidays.split(",").map(h => h.trim()).filter(h => h));
       setSuccess(true);
       setTimeout(() => {
         onRequestClose();
@@ -195,6 +213,38 @@ const CreateCourseModal: React.FC<CreateCourseModalProps> = ({ isOpen, onRequest
                 className="w-full"
               />
             </div>
+            <div className="space-y-2">
+  <Label htmlFor="starting-date">Starting Date *</Label>
+  <Input
+    id="starting-date"
+    type="date"
+    value={startingDate}
+    onChange={(e) => setStartingDate(e.target.value)}
+    disabled={isLoading}
+  />
+</div>
+<div className="space-y-2">
+  <Label htmlFor="ending-date">Ending Date *</Label>
+  <Input
+    id="ending-date"
+    type="date"
+    value={endingDate}
+    onChange={(e) => setEndingDate(e.target.value)}
+    disabled={isLoading}
+  />
+</div>
+<div className="space-y-2">
+  <Label htmlFor="holidays">Holidays</Label>
+  <Input
+    id="holidays"
+    type="text"
+    value={holidays}
+    onChange={(e) => setHolidays(e.target.value)}
+    placeholder="YYYY-MM-DD, YYYY-MM-DD"
+    disabled={isLoading}
+  />
+</div>
+
             <div className="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 space-y-2 space-y-reverse sm:space-y-0 pt-4">
               <Button
                 type="button"

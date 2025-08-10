@@ -22,31 +22,43 @@ export type Database = {
         }
         Relationships: []
       }
-      courses: {
-        Row: {
-          tags: string[] | null
-          id: string
-          title: string
-          description: string | null
-          price: number | null
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          title: string
-          description?: string | null
-          price?: number | null
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          title?: string
-          description?: string | null
-          price?: number | null
-          created_at?: string
-        }
-        Relationships: []
-      }
+     courses: {
+  Row: {
+    id: string
+    title: string
+    description: string | null
+    price: number | null
+    created_at: string
+    tags: string[] | null
+    starting_date: string // ISO date string from PostgreSQL
+    ending_date: string   // ISO date string
+    holidays: string[]    // ISO date strings for each holiday
+  }
+  Insert: {
+    id?: string
+    title: string
+    description?: string | null
+    price?: number | null
+    created_at?: string
+    tags?: string[] | null
+    starting_date: string
+    ending_date: string
+    holidays?: string[]
+  }
+  Update: {
+    id?: string
+    title?: string
+    description?: string | null
+    price?: number | null
+    created_at?: string
+    tags?: string[] | null
+    starting_date?: string
+    ending_date?: string
+    holidays?: string[]
+  }
+  Relationships: []
+}
+
       enrollments: {
         Row: {
           id: string

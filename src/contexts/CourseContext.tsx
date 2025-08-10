@@ -11,9 +11,26 @@ interface CourseContextType {
   courses: Course[];
   enrollments: Enrollment[];
   loading: boolean;
-  createCourse: (title: string, description: string, price: number, tags: string[]) => Promise<void>;
+    createCourse: (
+    title: string,
+    description: string,
+    price: number,
+    tags: string[],
+    startingDate: string,
+    endingDate: string,
+    holidays: string[]
+  ) => Promise<void>;
   courseUsers: Profile[];
-  updateCourse: (courseId: string, title: string, description: string, price: number, tags: string[]) => Promise<void>;
+   updateCourse: (
+    courseId: string,
+    title: string,
+    description: string,
+    price: number,
+    tags: string[],
+    startingDate: string,
+    endingDate: string,
+    holidays: string[]
+  ) => Promise<void>;
   deleteCourse: (courseId: string) => Promise<void>;
   enrollInCourse: (courseId: string) => Promise<void>;
   fetchCourses: () => Promise<void>;
@@ -86,30 +103,72 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
       fetchUserEnrollments();
     }
   }, [user, fetchUserEnrollments]);
-
-  const createCourse = useCallback(async (title: string, description: string, price: number, tags: string[]) => {
+const createCourse = useCallback(
+  async (
+    title: string,
+    description: string,
+    price: number,
+    tags: string[],
+    startingDate: string,  // YYYY-MM-DD
+    endingDate: string,    // YYYY-MM-DD
+    holidays: string[]     // array of YYYY-MM-DD strings
+  ) => {
     const { error } = await supabase
       .from("courses")
-      .insert([{ title, description, price, tags }]);
+      .insert([{
+        title,
+        description,
+        price,
+        tags,
+        starting_date: startingDate,
+        ending_date: endingDate,
+        holidays
+      }]);
+
     if (!error) {
       await fetchCourses();
     } else {
       // console.error("Error creating course:", error);
+      throw error;
     }
-  }, [fetchCourses]);
+  },
+  [fetchCourses]
+);
 
-  const updateCourse = useCallback(async (courseId: string, title: string, description: string, price: number, tags: string[]) => {
+const updateCourse = useCallback(
+  async (
+    courseId: string,
+    title: string,
+    description: string,
+    price: number,
+    tags: string[],
+    startingDate: string,  // YYYY-MM-DD
+    endingDate: string,    // YYYY-MM-DD
+    holidays: string[]     // array of YYYY-MM-DD strings
+  ) => {
     const { error } = await supabase
       .from("courses")
-      .update({ title, description, price, tags })
+      .update({
+        title,
+        description,
+        price,
+        tags,
+        starting_date: startingDate,
+        ending_date: endingDate,
+        holidays
+      })
       .eq("id", courseId);
+
     if (!error) {
       await fetchCourses();
     } else {
       // console.error("Error updating course:", error);
       throw error;
     }
-  }, [fetchCourses]);
+  },
+  [fetchCourses]
+);
+
 
   const deleteCourse = useCallback(async (courseId: string) => {
     const { error } = await supabase

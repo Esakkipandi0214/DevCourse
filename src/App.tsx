@@ -21,6 +21,7 @@ import PaymentPage from "./pages/PaymentPage";
 import DashboardPage from "./pages/DashboardPage";
 import Courses from "./pages/Courses";
 import CourseListPage from "./pages/AdminCourse";
+import CalendarPage from "./pages/CourseTracker";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +39,7 @@ const App = () => (
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/Courses" element={<Courses />} />
+            <Route path="/Courses/TrackCourse" element={<CalendarPage />} />
             <Route path="/admin/courses" element={<CourseListPage />} />
             <Route path="/curriculum" element={<CurriculumPage />} />
             <Route path="/why-choose-us" element={<WhyChooseUsPage />} />

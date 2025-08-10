@@ -28,7 +28,7 @@ export default function AboutPage() {
         </div>
       </section>
     <div className=' flex justify-center item-center text-center w-full'>
-      <section className="py-12 sm:w-[97%] rounded-2xl gradient-primary">
+      <section className="py-12 w-[98%] sm:w-[97%] rounded-2xl gradient-primary">
   <div className="max-w-4xl mx-auto px-6 text-center">
     <h2 className="text-2xl font-bold mb-4">
       Join Our Exclusive <span className=" text-white">WhatsApp Community</span>

@@ -17,6 +17,9 @@ interface EditCourseModalProps {
     description: string;
     price: number;
     tags: string[];
+    startingDate: string,
+    endingDate: string,
+    holidays: string[]
   } | null;
 }
 
@@ -26,6 +29,9 @@ const EditCourseModal: React.FC<EditCourseModalProps> = ({ isOpen, onRequestClos
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState<number | "">("");
   const [tags, setTags] = useState("");
+  const [startingDate, setStartingDate] = useState("");
+const [endingDate, setEndingDate] = useState("");
+const [holidays, setHolidays] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -37,6 +43,9 @@ const EditCourseModal: React.FC<EditCourseModalProps> = ({ isOpen, onRequestClos
       setDescription(course.description || "");
       setPrice(course.price);
       setTags(course.tags ? course.tags.join(", ") : "");
+      setStartingDate(course.startingDate || "");
+    setEndingDate(course.endingDate || "");
+    setHolidays(course.holidays ? course.holidays.join(", ") : "");
       setError(null);
       setSuccess(false);
       setTimeout(() => {
@@ -89,7 +98,9 @@ const EditCourseModal: React.FC<EditCourseModalProps> = ({ isOpen, onRequestClos
 
     setIsLoading(true);
     try {
-      await updateCourse(course.id, title.trim(), description.trim(), Number(price), tagsArray);
+      await updateCourse(course.id, title.trim(), description.trim(), Number(price), tagsArray,startingDate,
+  endingDate,
+  holidays.split(",").map(h => h.trim()).filter(h => h));
       setSuccess(true);
       setTimeout(() => {
         onRequestClose();
@@ -202,6 +213,38 @@ const EditCourseModal: React.FC<EditCourseModalProps> = ({ isOpen, onRequestClos
                 className="w-full"
               />
             </div>
+            <div className="space-y-2">
+  <Label htmlFor="starting-date">Starting Date *</Label>
+  <Input
+    id="starting-date"
+    type="date"
+    value={startingDate}
+    onChange={(e) => setStartingDate(e.target.value)}
+    disabled={isLoading}
+  />
+</div>
+<div className="space-y-2">
+  <Label htmlFor="ending-date">Ending Date *</Label>
+  <Input
+    id="ending-date"
+    type="date"
+    value={endingDate}
+    onChange={(e) => setEndingDate(e.target.value)}
+    disabled={isLoading}
+  />
+</div>
+<div className="space-y-2">
+  <Label htmlFor="holidays">Holidays</Label>
+  <Input
+    id="holidays"
+    type="text"
+    value={holidays}
+    onChange={(e) => setHolidays(e.target.value)}
+    placeholder="YYYY-MM-DD, YYYY-MM-DD"
+    disabled={isLoading}
+  />
+</div>
+
             <div className="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 space-y-2 space-y-reverse sm:space-y-0 pt-4">
               <Button type="button" variant="outline" onClick={handleClose} disabled={isLoading} className="w-full sm:w-auto bg-transparent">
                 Cancel
