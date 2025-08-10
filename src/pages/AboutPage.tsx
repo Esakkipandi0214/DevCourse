@@ -13,17 +13,39 @@ export default function AboutPage() {
               About Our Course
             </Badge>
             <h1 className="text-4xl lg:text-5xl font-bold mb-6">
-              Transform Your Career with 
-              <span className="text-gradient block">Full Stack Development</span>
+             Transform Your Career with{" "}
+              <span className="text-gradient block">Our Expert-Led Courses</span>
             </h1>
             <p className="text-xl text-muted-foreground leading-relaxed">
-              Our Full Stack Developer Evening Batch is meticulously designed for working professionals 
-              and students who aspire to build a successful career in web development. Learn industry-standard 
-              technologies through hands-on projects and real-world applications.
+              Our courses are designed to empower learners at every stage — from beginners to 
+  experienced professionals looking to upskill. With a focus on practical, 
+  hands-on learning, real-world projects, and flexible schedules, we ensure 
+  you gain the knowledge and confidence to excel in the tech industry. 
+  Whether you&apos;re aiming for a career change or career growth, our training 
+  programs equip you with the latest tools, technologies, and industry best practices.
             </p>
           </div>
         </div>
       </section>
+    <div className=' flex justify-center item-center text-center w-full'>
+      <section className="py-12 sm:w-[97%] rounded-2xl gradient-primary">
+  <div className="max-w-4xl mx-auto px-6 text-center">
+    <h2 className="text-2xl font-bold mb-4">
+      Join Our Exclusive <span className=" text-white">WhatsApp Community</span>
+    </h2>
+    <p className="text-lg text-white">
+      For every enrollment, you&apos;ll be added to our dedicated WhatsApp community group.  
+      Get **real-time updates**, **course-related guidelines**, and direct **mentor support** throughout your learning journey.
+    </p>
+    <div className="mt-6">
+      <span className="inline-block bg-green-500 text-white px-5 py-3 rounded-lg shadow-lg font-semibold">
+        📱 Connect • Learn • Grow
+      </span>
+    </div>
+  </div>
+</section>
+</div>
+
 
       {/* Course Goals */}
       <section className="py-16">

@@ -17,8 +17,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function HomePage() {
-    const {user } = useAuth();
-    const isAuthenticated = user;
+    const {user} = useAuth();
   const scrollToRegistration = () => {
     const element = document.getElementById('registration');
     element?.scrollIntoView({ behavior: 'smooth' });
@@ -50,7 +49,7 @@ export default function HomePage() {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                {!isAuthenticated && <Button 
+                {!user && <Button 
                   size="lg" 
                   className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold"
                   onClick={scrollToRegistration}
@@ -58,9 +57,9 @@ export default function HomePage() {
                   Join Now
                   <ChevronRight className="ml-2 h-5 w-5" />
                 </Button>}
-                <Link to="/curriculum">
-                  <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-blue-600">
-                    View Curriculum
+                <Link to="/Courses">
+                  <Button size="lg" variant="outline" className=" border-white bg-white text-blue-600">
+                    View Coureses {user && <ChevronRight className="ml-2 h-5 w-5" />}
                   </Button>
                 </Link>
               </div>
@@ -68,7 +67,7 @@ export default function HomePage() {
               <div className="flex flex-wrap gap-6 text-blue-100">
                 <div className="flex items-center">
                   <Calendar className="h-5 w-5 mr-2" />
-                  <span>2 Months</span>
+                  <span>1-2 Months</span>
                 </div>
                 <div className="flex items-center">
                   <Video className="h-5 w-5 mr-2" />
@@ -98,7 +97,7 @@ export default function HomePage() {
                     </div>
                     <div className="flex items-center text-white">
                       <Globe className="h-5 w-5 mr-3 text-yellow-300" />
-                      <span>3 Live Projects</span>
+                      <span>Live Projects</span>
                     </div>
                     <div className="flex items-center text-white">
                       <Users className="h-5 w-5 mr-3 text-yellow-300" />
@@ -116,11 +115,14 @@ export default function HomePage() {
       <section className="py-20 bg-gradient-secondary">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl lg:text-4xl font-bold mb-6">About the Course</h2>
+            <h2 className="text-3xl lg:text-4xl font-bold mb-6">About Our Courses</h2>
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-              Our Full Stack Developer Evening Batch is specially designed for working professionals and students 
-              who want to transition into tech or upgrade their skills. With live projects, hands-on learning, 
-              and flexible evening timings, you'll master modern web development technologies.
+             Our courses are designed to empower learners at every stage — from beginners to 
+  experienced professionals looking to upskill. With a focus on practical, 
+  hands-on learning, real-world projects, and flexible schedules, we ensure 
+  you gain the knowledge and confidence to excel in the tech industry. 
+  Whether you&apos;re aiming for a career change or career growth, our training 
+  programs equip you with the latest tools, technologies, and industry best practices.
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
@@ -175,15 +177,17 @@ export default function HomePage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
-              <div className="text-3xl lg:text-4xl font-bold mb-2">2</div>
+              <div className="text-3xl lg:text-4xl font-bold mb-2">1-2</div>
               <div className="text-blue-100">Months Duration</div>
             </div>
             <div>
-              <div className="text-3xl lg:text-4xl font-bold mb-2">3</div>
-              <div className="text-blue-100">Live Projects</div>
+              <div className="text-3xl lg:text-4xl font-bold mb-2">2+</div>
+              <div className="text-blue-100">Live Projects (Based Course Enrolled)</div>
             </div>
             <div>
-              <div className="text-3xl lg:text-4xl font-bold mb-2">₹1000</div>
+              <div className="text-3xl lg:text-4xl font-bold mb-2"><Link to="/Courses">
+                    Check On
+                </Link></div>
               <div className="text-blue-100">Course Fee</div>
             </div>
             <div>
@@ -242,7 +246,7 @@ export default function HomePage() {
       </section> */}
 
       {/* CTA Section */}
-     {!isAuthenticated && <section id="registration" className="py-20 gradient-primary text-white">
+     {!user && <section id="registration" className="py-20 gradient-primary text-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl lg:text-4xl font-bold mb-6">Ready to Start Your Journey?</h2>
           <p className="text-xl mb-8 text-blue-100 max-w-2xl mx-auto">

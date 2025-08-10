@@ -24,9 +24,9 @@ export default function WhyChooseUsPage() {
     {
       icon: DollarSign,
       title: "Affordable Pricing",
-      description: "Premium quality education at just ₹1000 for the complete 2-month course. Best value in the market for full stack development training.",
+      description: "Premium quality education at just below ₹1000 for the complete 1-2 month course. Best value in the market for full stack development training.",
       features: [
-        "Complete course for just ₹1000",
+        "Complete course for just below ₹1500",
         "No hidden charges or additional fees",
         "payment after first class",
         "Best value for money in the industry"
@@ -45,7 +45,7 @@ export default function WhyChooseUsPage() {
     {
       icon: Briefcase,
       title: "Real-world Projects",
-      description: "Build three complete full-stack applications that you can showcase in your portfolio to potential employers.",
+      description: "Build  complete Web applications that you can showcase in your portfolio to potential employers.",
       features: [
         "E-commerce website project",
         "Professional portfolio site",
@@ -123,10 +123,12 @@ export default function WhyChooseUsPage() {
               Why Our Course is
               <span className="text-gradient block">Perfect for You</span>
             </h1>
-            <p className="text-xl text-muted-foreground leading-relaxed">
-              Discover what makes our Full Stack Developer Evening Batch the ideal choice 
-              for working professionals and students who want to excel in web development.
-            </p>
+           <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
+  Join our evening batch and gain in-demand skills to build dynamic, scalable
+  web applications. <strong>Every enrollment</strong> gets exclusive access to
+  our <strong>WhatsApp Community Group</strong> — your hub for real-time course
+  updates, guidance, and peer support.
+</p>
           </div>
         </div>
       </section>
@@ -215,7 +217,7 @@ export default function WhyChooseUsPage() {
                     <tbody className="divide-y">
                       <tr>
                         <td className="p-4">Course Fee</td>
-                        <td className="p-4 text-center text-green-600 font-semibold">₹1000</td>
+                        <td className="p-4 text-center text-green-600 font-semibold">below ₹1500</td>
                         <td className="p-4 text-center text-red-600">₹5,000 - ₹25,000</td>
                       </tr>
                       <tr>
@@ -225,7 +227,7 @@ export default function WhyChooseUsPage() {
                       </tr>
                       <tr>
                         <td className="p-4">Live Projects</td>
-                        <td className="p-4 text-center text-green-600 font-semibold">3 Complete Projects</td>
+                        <td className="p-4 text-center text-green-600 font-semibold">2+ Projects (based on course)</td>
                         <td className="p-4 text-center text-red-600">0-1 Basic Project</td>
                       </tr>
                       <tr>
@@ -253,7 +255,7 @@ export default function WhyChooseUsPage() {
       </section>
 
       {/* Success Stories */}
-      <section className="py-16 bg-white">
+      {/* <section className="py-16 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-6xl mx-auto text-center">
             <h2 className="text-3xl font-bold mb-12">Success Stories</h2>
@@ -297,18 +299,18 @@ export default function WhyChooseUsPage() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* CTA Section */}
       {!isAuthenticated && <section className="py-16 gradient-primary text-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Transform Your Career?</h2>
           <p className="text-xl mb-8 text-blue-100 max-w-2xl mx-auto">
-            Join thousands of successful developers who started their journey with our evening batch program.
+            Join  developers who started their journey with our evening batch program.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/auth">
+            <Link to="/Courses">
               <Button size="lg" className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold">
                 Enroll Now
               </Button>
