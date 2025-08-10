@@ -244,7 +244,7 @@ export default function AuthPage() {
                       <Button
                         variant="link"
                         onClick={() => setIsForgotPassword(true)}
-                        className="text-sm text-muted-foreground"
+                        className="text-sm font-medium text-primary hover:text-primary/80"
                       >
                         Forgot your password?
                       </Button>
@@ -259,7 +259,7 @@ export default function AuthPage() {
                   onClick={() => setIsForgotPassword(false)}
                   className="text-sm"
                 >
-                  Back to sign in
+                  ← Back to sign in
                 </Button>
               )}
             </div>
