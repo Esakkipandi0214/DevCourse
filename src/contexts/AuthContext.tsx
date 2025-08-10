@@ -9,6 +9,7 @@ interface AuthContextType {
   signUp: (email: string, password: string, fullName: string, phone: string) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
+  resetPassword: (email: string) => Promise<{ error: any }>;
   isAdmin: boolean;
   setAdmin: (userId: string) => Promise<{ error: any }>;
   removeAdmin: (userId: string) => Promise<{ error: any }>;
@@ -148,6 +149,13 @@ const fetchAllUsers = async () => {
     await supabase.auth.signOut();
   };
 
+  const resetPassword = async (email: string) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth?mode=reset`,
+    });
+    return { error };
+  };
+
   const setAdmin = async (userId: string) => {
     const { error } = await supabase
       .from('admin_users')
@@ -180,6 +188,7 @@ const fetchAllUsers = async () => {
     signUp,
     signIn,
     signOut,
+    resetPassword,
     isAdmin,
     setAdmin,
     removeAdmin,

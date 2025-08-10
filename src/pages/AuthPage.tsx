@@ -10,6 +10,7 @@ import { BookOpen, Eye, EyeOff } from 'lucide-react';
 
 export default function AuthPage() {
   const [isSignUp, setIsSignUp] = useState(false);
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -19,7 +20,7 @@ export default function AuthPage() {
     phone: ''
   });
 
-  const { signUp, signIn, user } = useAuth();
+  const { signUp, signIn, resetPassword, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -37,7 +38,23 @@ export default function AuthPage() {
     setLoading(true);
 
     try {
-      if (isSignUp) {
+      if (isForgotPassword) {
+        const { error } = await resetPassword(formData.email);
+        
+        if (error) {
+          toast({
+            title: "Reset Password Error",
+            description: error.message,
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Reset Link Sent!",
+            description: "Please check your email for password reset instructions.",
+          });
+          setIsForgotPassword(false);
+        }
+      } else if (isSignUp) {
         const { error } = await signUp(formData.email, formData.password, formData.fullName, formData.phone);
         
         if (error) {
@@ -98,12 +115,14 @@ export default function AuthPage() {
             <span className="text-2xl font-bold text-gradient">DevCourse</span>
           </Link>
           <h2 className="text-3xl font-bold">
-            {isSignUp ? 'Join the Course' : 'Welcome Back'}
+            {isForgotPassword ? 'Reset Password' : isSignUp ? 'Join the Course' : 'Welcome Back'}
           </h2>
           <p className="mt-2 text-muted-foreground">
-            {isSignUp 
-              ? 'Start your full stack development journey' 
-              : 'Sign in to access your dashboard'
+            {isForgotPassword 
+              ? 'Enter your email to receive reset instructions'
+              : isSignUp 
+                ? 'Start your full stack development journey' 
+                : 'Sign in to access your dashboard'
             }
           </p>
         </div>
@@ -111,17 +130,21 @@ export default function AuthPage() {
         {/* Form */}
         <Card>
           <CardHeader>
-            <CardTitle>{isSignUp ? 'Create Account' : 'Sign In'}</CardTitle>
+            <CardTitle>
+              {isForgotPassword ? 'Reset Password' : isSignUp ? 'Create Account' : 'Sign In'}
+            </CardTitle>
             <CardDescription>
-              {isSignUp 
-                ? 'Enter your details to register for the course' 
-                : 'Enter your credentials to continue'
+              {isForgotPassword 
+                ? 'We\'ll send you a link to reset your password'
+                : isSignUp 
+                  ? 'Enter your details to register for the course' 
+                  : 'Enter your credentials to continue'
               }
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              {isSignUp && (
+              {!isForgotPassword && isSignUp && (
                 <>
                   <div className="space-y-2">
                     <Label htmlFor="fullName">Full Name</Label>
@@ -164,51 +187,81 @@ export default function AuthPage() {
                 />
               </div>
               
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    required
-                    placeholder="Enter your password"
-                    className="pr-10"
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                  </Button>
+              {!isForgotPassword && (
+                <div className="space-y-2">
+                  <Label htmlFor="password">Password</Label>
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      required
+                      placeholder="Enter your password"
+                      className="pr-10"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
                 </div>
-              </div>
+              )}
               
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Processing...' : isSignUp ? 'Create Account' : 'Sign In'}
+                {loading ? 'Processing...' : 
+                 isForgotPassword ? 'Send Reset Link' :
+                 isSignUp ? 'Create Account' : 'Sign In'}
               </Button>
             </form>
             
-            <div className="mt-6 text-center">
-              <Button
-                variant="link"
-                onClick={() => setIsSignUp(!isSignUp)}
-                className="text-sm"
-              >
-                {isSignUp 
-                  ? 'Already have an account? Sign in' 
-                  : "Don't have an account? Sign up"
-                }
-              </Button>
+            <div className="mt-6 text-center space-y-2">
+              {!isForgotPassword && (
+                <>
+                  <Button
+                    variant="link"
+                    onClick={() => setIsSignUp(!isSignUp)}
+                    className="text-sm"
+                  >
+                    {isSignUp 
+                      ? 'Already have an account? Sign in' 
+                      : "Don't have an account? Sign up"
+                    }
+                  </Button>
+                  
+                  {!isSignUp && (
+                    <div>
+                      <Button
+                        variant="link"
+                        onClick={() => setIsForgotPassword(true)}
+                        className="text-sm text-muted-foreground"
+                      >
+                        Forgot your password?
+                      </Button>
+                    </div>
+                  )}
+                </>
+              )}
+              
+              {isForgotPassword && (
+                <Button
+                  variant="link"
+                  onClick={() => setIsForgotPassword(false)}
+                  className="text-sm"
+                >
+                  Back to sign in
+                </Button>
+              )}
             </div>
           </CardContent>
         </Card>
