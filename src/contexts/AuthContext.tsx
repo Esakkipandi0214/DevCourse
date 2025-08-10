@@ -127,7 +127,7 @@ const fetchAllUsers = async () => {
 
 
   const signUp = async (email: string, password: string, fullName: string, phone: string) => {
-    const redirectUrl = `/${import.meta.env.VITE_API_BASE_URL}/`;
+    const redirectUrl = `${window.location.origin}/`;
 
     const { error } = await supabase.auth.signUp({
       email,
@@ -152,7 +152,7 @@ const fetchAllUsers = async () => {
 
   const resetPassword = async (email: string) => {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `/${import.meta.env.VITE_API_BASE_URL}/auth?mode=reset`,
+      redirectTo: `${window.location.origin}/auth?mode=reset`,
     });
     return { error };
   };
