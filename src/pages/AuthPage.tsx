@@ -11,25 +11,35 @@ import { BookOpen, Eye, EyeOff } from 'lucide-react';
 export default function AuthPage() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
+  const [isResetMode, setIsResetMode] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
+    confirmPassword: '',
     fullName: '',
     phone: ''
   });
 
-  const { signUp, signIn, resetPassword, user } = useAuth();
+  const { signUp, signIn, resetPassword, updatePassword, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  useEffect(()=>{
+  useEffect(() => {
+    // Check if we're in reset mode from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('mode') === 'reset') {
+      setIsResetMode(true);
+      setIsForgotPassword(false);
+      setIsSignUp(false);
+    }
+
     // Redirect if already authenticated
-  if (user) {
-    navigate('/dashboard');
-  }
-  },[user, navigate]);
+    if (user && !isResetMode) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate, isResetMode]);
 
   
 
@@ -38,7 +48,32 @@ export default function AuthPage() {
     setLoading(true);
 
     try {
-      if (isForgotPassword) {
+      if (isResetMode) {
+        if (formData.password !== formData.confirmPassword) {
+          toast({
+            title: "Password Mismatch",
+            description: "Passwords do not match. Please try again.",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        const { error } = await updatePassword(formData.password);
+        
+        if (error) {
+          toast({
+            title: "Update Password Error",
+            description: error.message,
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Password Updated!",
+            description: "Your password has been successfully updated.",
+          });
+          navigate('/dashboard');
+        }
+      } else if (isForgotPassword) {
         const { error } = await resetPassword(formData.email);
         
         if (error) {
@@ -115,14 +150,16 @@ export default function AuthPage() {
             <span className="text-2xl font-bold text-gradient">DevCourse</span>
           </Link>
           <h2 className="text-3xl font-bold">
-            {isForgotPassword ? 'Reset Password' : isSignUp ? 'Join the Course' : 'Welcome Back'}
+            {isResetMode ? 'Set New Password' : isForgotPassword ? 'Reset Password' : isSignUp ? 'Join the Course' : 'Welcome Back'}
           </h2>
           <p className="mt-2 text-muted-foreground">
-            {isForgotPassword 
-              ? 'Enter your email to receive reset instructions'
-              : isSignUp 
-                ? 'Start your full stack development journey' 
-                : 'Sign in to access your dashboard'
+            {isResetMode 
+              ? 'Enter your new password below'
+              : isForgotPassword 
+                ? 'Enter your email to receive reset instructions'
+                : isSignUp 
+                  ? 'Start your full stack development journey' 
+                  : 'Sign in to access your dashboard'
             }
           </p>
         </div>
@@ -131,20 +168,22 @@ export default function AuthPage() {
         <Card>
           <CardHeader>
             <CardTitle>
-              {isForgotPassword ? 'Reset Password' : isSignUp ? 'Create Account' : 'Sign In'}
+              {isResetMode ? 'Set New Password' : isForgotPassword ? 'Reset Password' : isSignUp ? 'Create Account' : 'Sign In'}
             </CardTitle>
             <CardDescription>
-              {isForgotPassword 
-                ? 'We\'ll send you a link to reset your password'
-                : isSignUp 
-                  ? 'Enter your details to register for the course' 
-                  : 'Enter your credentials to continue'
+              {isResetMode 
+                ? 'Choose a strong password for your account'
+                : isForgotPassword 
+                  ? 'We\'ll send you a link to reset your password'
+                  : isSignUp 
+                    ? 'Enter your details to register for the course' 
+                    : 'Enter your credentials to continue'
               }
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              {!isForgotPassword && isSignUp && (
+              {!isForgotPassword && !isResetMode && isSignUp && (
                 <>
                   <div className="space-y-2">
                     <Label htmlFor="fullName">Full Name</Label>
@@ -174,59 +213,79 @@ export default function AuthPage() {
                 </>
               )}
               
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                  placeholder="your@email.com"
-                />
-              </div>
+              {!isResetMode && (
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                    placeholder="your@email.com"
+                  />
+                </div>
+              )}
               
               {!isForgotPassword && (
-                <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
-                  <div className="relative">
-                    <Input
-                      id="password"
-                      name="password"
-                      type={showPassword ? "text" : "password"}
-                      value={formData.password}
-                      onChange={handleInputChange}
-                      required
-                      placeholder="Enter your password"
-                      className="pr-10"
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
-                    </Button>
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="password">{isResetMode ? 'New Password' : 'Password'}</Label>
+                    <div className="relative">
+                      <Input
+                        id="password"
+                        name="password"
+                        type={showPassword ? "text" : "password"}
+                        value={formData.password}
+                        onChange={handleInputChange}
+                        required
+                        placeholder={isResetMode ? 'Enter your new password' : 'Enter your password'}
+                        className="pr-10"
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
                   </div>
-                </div>
+
+                  {isResetMode && (
+                    <div className="space-y-2">
+                      <Label htmlFor="confirmPassword">Confirm New Password</Label>
+                      <Input
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        type="password"
+                        value={formData.confirmPassword}
+                        onChange={handleInputChange}
+                        required
+                        placeholder="Confirm your new password"
+                      />
+                    </div>
+                  )}
+                </>
               )}
               
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? 'Processing...' : 
+                 isResetMode ? 'Update Password' :
                  isForgotPassword ? 'Send Reset Link' :
                  isSignUp ? 'Create Account' : 'Sign In'}
               </Button>
             </form>
             
             <div className="mt-6 text-center space-y-2">
-              {!isForgotPassword && (
+              {!isForgotPassword && !isResetMode && (
                 <>
                   <Button
                     variant="link"
@@ -253,10 +312,13 @@ export default function AuthPage() {
                 </>
               )}
               
-              {isForgotPassword && (
+              {(isForgotPassword || isResetMode) && (
                 <Button
                   variant="link"
-                  onClick={() => setIsForgotPassword(false)}
+                  onClick={() => {
+                    setIsForgotPassword(false);
+                    setIsResetMode(false);
+                  }}
                   className="text-sm"
                 >
                   ← Back to sign in
