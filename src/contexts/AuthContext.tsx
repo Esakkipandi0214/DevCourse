@@ -127,7 +127,7 @@ const fetchAllUsers = async () => {
 
 
   const signUp = async (email: string, password: string, fullName: string, phone: string) => {
-    const redirectUrl = `https://dev-course-flax.vercel.app/`;
+    const redirectUrl = `/${import.meta.env.VITE_API_BASE_URL}/`;
 
     const { error } = await supabase.auth.signUp({
       email,
@@ -152,7 +152,7 @@ const fetchAllUsers = async () => {
 
   const resetPassword = async (email: string) => {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `https://dev-course-flax.vercel.app/auth?mode=reset`,
+      redirectTo: `/${import.meta.env.VITE_API_BASE_URL}/auth?mode=reset`,
     });
     return { error };
   };
