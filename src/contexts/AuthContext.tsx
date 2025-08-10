@@ -61,31 +61,32 @@ const checkAdminStatus = async (authUserId: string) => {
   try {
     // 1. Get the profile row for this auth user
     const { data: profile, error: profileError } = await supabase
-      .from("profiles")
-      .select("id") // profiles.id is the FK to admin_users.user_id
-      .eq("user_id", authUserId)
+      .from('profiles')
+      .select('id')
+      .eq('user_id', authUserId)
       .single();
 
     if (profileError) throw profileError;
 
-    // 2. Get all admin rows
-    const { data: allAdmins, error: allAdminsError } = await supabase
-      .from("admin_users")
-      .select("*");
+    // 2. Query admin_users to check if profile.id exists there
+    const { data: adminEntry, error: adminError } = await supabase
+      .from('admin_users')
+      .select('user_id')
+      .eq('user_id', profile.id)
+      .single();
 
-    if (allAdminsError) throw allAdminsError;
+    if (adminError && adminError.code !== 'PGRST116') { // ignore not found error
+      throw adminError;
+    }
 
-    // console.log("Profile:", profile, "All Admins:", allAdmins);
-
-    // 3. Compare profile.id to admin_users.user_id
-    const isAdmin = allAdmins.some(admin => admin.user_id === profile.id);
-    setIsAdmin(isAdmin);
+    setIsAdmin(!!adminEntry);
 
   } catch (err) {
-    // console.error("Error:", err);
+    console.error('Error checking admin status:', err);
     setIsAdmin(false);
   }
 };
+
 
 
 
@@ -96,7 +97,7 @@ const fetchAllUsers = async () => {
     .select("id, full_name, phone, user_id");
 
   if (profilesError) {
-    console.error("Profiles fetch error:", profilesError);
+    // console.error("Profiles fetch error:", profilesError);
     return;
   }
 
@@ -106,7 +107,7 @@ const fetchAllUsers = async () => {
     .select("user_id");
 
   if (adminsError) {
-    console.error("Admins fetch error:", adminsError);
+    // console.error("Admins fetch error:", adminsError);
     return;
   }
 
@@ -122,7 +123,7 @@ const fetchAllUsers = async () => {
   // 5. Save to state
   setAllUsers(usersWithAdminFlag);
 
-  console.log("All users with admin flag:", usersWithAdminFlag);
+  // console.log("All users with admin flag:", usersWithAdminFlag);
 };
 
 

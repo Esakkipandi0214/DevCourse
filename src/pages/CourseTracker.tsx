@@ -42,7 +42,7 @@ export default function CalendarPage() {
 
     const fetchSingle = async () => {
       const fetchedCourse = await getCourseById(courseId);
-      console.log("Fetched Course:", fetchedCourse);
+      // console.log("Fetched Course:", fetchedCourse);
 
       setCourse(fetchedCourse);
     };
@@ -67,8 +67,8 @@ export default function CalendarPage() {
     return !holidays.includes(date) && currentDate <= today;
   });
 
-  console.log("All Dates:", allDates);
-  console.log("Completed Dates:", completedDates);
+  // console.log("All Dates:", allDates);
+  // console.log("Completed Dates:", completedDates);
 
   const getDaysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
 
@@ -105,7 +105,7 @@ export default function CalendarPage() {
       else if (completed) bgColor = "bg-green-100";
       else if (inCourse) bgColor = "bg-yellow-50";
 
-      console.log("Date:", currentDate.toISOString().split("T")[0], "Holiday:", holiday, "Completed:", completed);
+      // console.log("Date:", currentDate.toISOString().split("T")[0], "Holiday:", holiday, "Completed:", completed);
 
       calendarDays.push(
         <div key={day} className={`h-16 sm:h-20 border border-gray-200 p-1 relative ${bgColor} ${isToday ? "ring-2 ring-blue-400" : ""}`}>
