@@ -18,7 +18,13 @@ const truncateDescription = (text, wordLimit) => {
   return text;
 };
 
-export default function MernCourseCard() {
+interface CourseCard {
+  isDashboard?: boolean;
+}
+
+
+
+export default function MernCourseCard({ isDashboard}:CourseCard){
   const { courses, enrollments, enrollInCourse, loading } = useCourses();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
@@ -39,18 +45,21 @@ export default function MernCourseCard() {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-      {courses.map((course) => {
+      {(isDashboard
+      ? courses.filter((course) => isEnrolled(course.id)) // show only enrolled courses
+      : courses // show all courses
+    ).map((course) => {
         const description = truncateDescription(course.description, 20);
-
+        
         return (
           <Card key={course.id} className="w-auto hover:shadow-lg transition-shadow duration-300">
             <CardHeader className="space-y-4">
-              <div className="flex justify-between items-start">
+             {!isDashboard && <div className="flex justify-between items-start">
                 <CardTitle className="text-2xl font-bold">{course.title}</CardTitle>
                 {(user && isAdmin)&&<Button variant="ghost" size="icon" onClick={() => handleEditClick(course)}>
                   <Pencil className="h-4 w-4" />
                 </Button>}
-              </div>
+              </div>}
               <div className="flex flex-wrap gap-2">
                 {course.tags && course.tags.map((tag, index) => (
                   <Badge key={index} className="bg-blue-100 text-blue-800 hover:bg-blue-100">
@@ -90,6 +99,13 @@ export default function MernCourseCard() {
                                             </Link>
                                           </div>
                   }
+                 {/* {isDashboard ?
+                 <RouterLink to={`/Courses/TrackCourse?id=${course.id}`} className="w-full">
+                    <Button variant="outline" className="w-full bg-transparent">
+                      Track Course
+                    </Button>
+                  </RouterLink>
+                 : } */}
                   <RouterLink to={`/curriculum`} className="w-full">
                     <Button variant="outline" className="w-full bg-transparent">
                       View Curriculum

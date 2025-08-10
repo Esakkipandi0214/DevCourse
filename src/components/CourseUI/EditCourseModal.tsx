@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface EditCourseModalProps {
   isOpen: boolean;
@@ -19,6 +20,8 @@ interface EditCourseModalProps {
     tags: string[];
     startingDate: string,
     endingDate: string,
+    starting_date: string,
+    ending_date: string,
     holidays: string[]
   } | null;
 }
@@ -37,14 +40,16 @@ const [holidays, setHolidays] = useState("");
   const [success, setSuccess] = useState(false);
   const titleInputRef = useRef<HTMLInputElement>(null);
 
+  const { toast } = useToast();
+
   useEffect(() => {
     if (isOpen && course) {
       setTitle(course.title);
       setDescription(course.description || "");
       setPrice(course.price);
       setTags(course.tags ? course.tags.join(", ") : "");
-      setStartingDate(course.startingDate || "");
-    setEndingDate(course.endingDate || "");
+      setStartingDate((course.startingDate || course.starting_date) || "");
+    setEndingDate((course.endingDate || course.ending_date) || "");
     setHolidays(course.holidays ? course.holidays.join(", ") : "");
       setError(null);
       setSuccess(false);
@@ -71,21 +76,60 @@ const [holidays, setHolidays] = useState("");
     };
   }, [isOpen, onRequestClose]);
 
-  const validateForm = (): boolean => {
-    if (!title.trim()) {
-      setError("Course title is required");
-      return false;
+ const isValidDate = (dateString: string): boolean => {
+  const date = new Date(dateString);
+  return !isNaN(date.getTime());
+};
+
+const isDateInRange = (dateString: string, start: string, end: string): boolean => {
+  const date = new Date(dateString);
+  const startDate = new Date(start);
+  const endDate = new Date(end);
+  return date >= startDate && date <= endDate;
+};
+
+const validateForm = (): boolean => {
+  if (!title.trim()) {
+    toast({ title: "Course title is required", variant: "destructive" });
+    return false;
+  }
+  if (title.trim().length < 3) {
+    toast({ title: "Course title must be at least 3 characters long", variant: "destructive" });
+    return false;
+  }
+  if (!price || price <= 0) {
+    toast({ title: "Please enter a valid price greater than 0", variant: "destructive" });
+    return false;
+  }
+  if (!startingDate) {
+    toast({ title: "Starting date is required", variant: "destructive" });
+    return false;
+  }
+  if (!endingDate) {
+    toast({ title: "Ending date is required", variant: "destructive" });
+    return false;
+  }
+  if (new Date(endingDate) < new Date(startingDate)) {
+    toast({ title: "Ending date cannot be earlier than starting date", variant: "destructive" });
+    return false;
+  }
+  if (holidays.trim()) {
+    const holidayArray = holidays.split(",").map(h => h.trim()).filter(h => h);
+    for (const h of holidayArray) {
+      if (!isValidDate(h)) {
+        toast({ title: `Holiday date "${h}" is invalid`, variant: "destructive" });
+        return false;
+      }
+      if (!isDateInRange(h, startingDate, endingDate)) {
+        toast({ title: `Holiday date "${h}" must be between starting and ending dates`, variant: "destructive" });
+        return false;
+      }
     }
-    if (title.trim().length < 3) {
-      setError("Course title must be at least 3 characters long");
-      return false;
-    }
-    if (!price || price <= 0) {
-      setError("Please enter a valid price greater than 0");
-      return false;
-    }
-    return true;
-  };
+  }
+  return true;
+};
+
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -36,6 +36,7 @@ interface CourseContextType {
   fetchCourses: () => Promise<void>;
   fetchUserEnrollments: () => Promise<void>;
   fetchCourseEnrollments: (courseId: string) => Promise<void>;
+  getCourseById: (courseId: string) => Promise<Course | null>;
 }
 
 const CourseContext = createContext<CourseContextType | undefined>(undefined);
@@ -169,6 +170,20 @@ const updateCourse = useCallback(
   [fetchCourses]
 );
 
+const getCourseById = useCallback(async (courseId: string): Promise<Course | null> => {
+  const { data, error } = await supabase
+    .from("courses")
+    .select("*")
+    .eq("id", courseId)
+    .single();
+
+  if (error) {
+    // console.error("Error fetching course:", error);
+    return null;
+  }
+  return data;
+}, []);
+
 
   const deleteCourse = useCallback(async (courseId: string) => {
     const { error } = await supabase
@@ -207,7 +222,8 @@ const updateCourse = useCallback(
         enrollInCourse,
         fetchCourses,
         fetchUserEnrollments,
-        fetchCourseEnrollments
+        fetchCourseEnrollments,
+        getCourseById
       }}
     >
       {children}

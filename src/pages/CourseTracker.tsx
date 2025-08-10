@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Check, XCircle } from "lucide-react";
+import { useCourses } from "@/contexts/CourseContext";
 
 const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const months = [
@@ -9,60 +10,78 @@ const months = [
   "July", "August", "September", "October", "November", "December"
 ];
 
-// Course date range
-const courseStartDate = new Date("2025-08-01");
-const courseEndDate = new Date("2025-08-20");
-
-// Completed dates
-const completedDates = [
-  "2025-08-01",
-  "2025-08-03",
-  "2025-08-05",
-  "2025-08-08"
-];
-
-// Holidays
-const holidays = [
-  "2025-08-07",
-  "2025-08-14"
-];
-
 const today = new Date();
+
+// Helper function to get all dates between two dates (inclusive)
+function getDatesBetween(startDate, endDate) {
+  const dates = [];
+  const current = new Date(startDate);
+
+  while (current <= endDate) {
+    dates.push(current.toISOString().split("T")[0]);
+    current.setDate(current.getDate() + 1);
+  }
+
+  return dates;
+}
 
 export default function CalendarPage() {
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
 
-  const getDaysInMonth = (month: number, year: number) =>
-    new Date(year, month + 1, 0).getDate();
+  const { getCourseById } = useCourses();
 
-  const getFirstDayOfMonth = (month: number, year: number) =>
-    new Date(year, month, 1).getDay();
+  const [course, setCourse] = useState(null);
 
-  const isCompleted = (date: Date) =>
-    completedDates.includes(date.toISOString().split("T")[0]);
+  useEffect(() => {
+    // Get the query param 'id' from the current URL
+    const params = new URLSearchParams(window.location.search);
+    const courseId = params.get("id");
 
-  const isInCourseRange = (date: Date) =>
-    date >= courseStartDate && date <= courseEndDate;
+    if (!courseId) return;
 
-  const isHoliday = (date: Date) =>
-    holidays.includes(date.toISOString().split("T")[0]);
+    const fetchSingle = async () => {
+      const fetchedCourse = await getCourseById(courseId);
+      console.log("Fetched Course:", fetchedCourse);
 
-  const totalCourseDays = (() => {
-    let count = 0;
-    for (
-      let d = new Date(courseStartDate);
-      d <= courseEndDate;
-      d.setDate(d.getDate() + 1)
-    ) {
-      if (!isHoliday(new Date(d))) count++;
-    }
-    return count;
-  })();
+      setCourse(fetchedCourse);
+    };
 
-  const totalCompleted = completedDates.filter(
-    (d) => !holidays.includes(d)
-  ).length;
+    fetchSingle();
+  }, [getCourseById]);
+
+  if (!course) {
+    return <div>Loading course data...</div>;
+  }
+
+  const courseStartDate = new Date(course.starting_date);
+  const courseEndDate = new Date(course.ending_date);
+  const holidays = course.holidays || [];
+
+  // Generate all dates between start and end dates
+  const allDates = getDatesBetween(courseStartDate, courseEndDate);
+
+  // Filter out holidays and mark dates as completed only if they are <= today
+  const completedDates = allDates.filter(date => {
+    const currentDate = new Date(date);
+    return !holidays.includes(date) && currentDate <= today;
+  });
+
+  console.log("All Dates:", allDates);
+  console.log("Completed Dates:", completedDates);
+
+  const getDaysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
+
+  const getFirstDayOfMonth = (month, year) => new Date(year, month, 1).getDay();
+
+  const isCompleted = (date) => completedDates.includes(date.toISOString().split("T")[0]);
+
+  const isInCourseRange = (date) => date >= courseStartDate && date <= courseEndDate;
+
+  const isHoliday = (date) => holidays.includes(date.toISOString().split("T")[0]);
+
+  const totalCourseDays = allDates.length;
+  const totalCompleted = completedDates.length;
 
   const renderCalendarDays = () => {
     const daysInMonth = getDaysInMonth(currentMonth, currentYear);
@@ -70,17 +89,12 @@ export default function CalendarPage() {
     const calendarDays = [];
 
     for (let i = 0; i < firstDay; i++) {
-      calendarDays.push(
-        <div key={`empty-${i}`} className="h-16 sm:h-20 border border-gray-200 bg-gray-50"></div>
-      );
+      calendarDays.push(<div key={`empty-${i}`} className="h-16 sm:h-20 border border-gray-200 bg-gray-50"></div>);
     }
 
     for (let day = 1; day <= daysInMonth; day++) {
       const currentDate = new Date(currentYear, currentMonth, day);
-      const isToday =
-        today.getDate() === day &&
-        today.getMonth() === currentMonth &&
-        today.getFullYear() === currentYear;
+      const isToday = today.getDate() === day && today.getMonth() === currentMonth && today.getFullYear() === currentYear;
 
       const completed = isCompleted(currentDate);
       const inCourse = isInCourseRange(currentDate);
@@ -91,13 +105,10 @@ export default function CalendarPage() {
       else if (completed) bgColor = "bg-green-100";
       else if (inCourse) bgColor = "bg-yellow-50";
 
+      console.log("Date:", currentDate.toISOString().split("T")[0], "Holiday:", holiday, "Completed:", completed);
+
       calendarDays.push(
-        <div
-          key={day}
-          className={`h-16 sm:h-20 border border-gray-200 p-1 relative ${bgColor} ${
-            isToday ? "ring-2 ring-blue-400" : ""
-          }`}
-        >
+        <div key={day} className={`h-16 sm:h-20 border border-gray-200 p-1 relative ${bgColor} ${isToday ? "ring-2 ring-blue-400" : ""}`}>
           <div className="text-xs sm:text-sm font-medium">{day}</div>
           {completed && !holiday && (
             <div className="absolute top-1 right-1 text-green-600">
@@ -195,10 +206,7 @@ export default function CalendarPage() {
         </div>
         <div className="grid grid-cols-7 min-w-[500px]">
           {weekDays.map((day, index) => (
-            <div
-              key={index}
-              className="text-center font-medium p-1 sm:p-2 border-b border-gray-200 text-xs sm:text-sm"
-            >
+            <div key={index} className="text-center font-medium p-1 sm:p-2 border-b border-gray-200 text-xs sm:text-sm">
               {day}
             </div>
           ))}
